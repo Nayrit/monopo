@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>monopo | london</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            background: black;
+            cursor: none; /* Hide default cursor */
+        }
+        
+        .gradient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f06449 0%, #1c63e0 50%, #f06449 100%);
+            opacity: 0.8;
+            z-index: -1;
+            filter: blur(50px);
+            transition: background 0.1s;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .logo span {
+            margin: 0 10px;
+            opacity: 0.5;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            color: white;
+        }
+        
+        .nav-left, .nav-right {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-item {
+            margin: 10px 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .nav-item.active {
+            position: relative;
+        }
+        
+        .nav-item.active::before {
+            content: "▶";
+            position: absolute;
+            left: -15px;
+            font-size: 0.5rem;
+        }
+        
+        .nav-right .time {
+            position: relative;
+        }
+        
+        .main-content {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+        
+        .hero-text {
+            text-align: center;
+            font-size: 5rem;
+            font-weight: 300;
+            line-height: 1.1;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .floating-character {
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.7;
+            color: white;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .footer-item {
+            max-width: 200px;
+        }
+        
+        .footer-item h3 {
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+        
+        .footer-item p {
+            opacity: 0.7;
+            font-weight: 300;
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .blur-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            filter: blur(20px);
+            z-index: -1;
+        }
+        
+        /* Custom cursor with magnifier effect */
+        .custom-cursor {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        /* Japanese translation that appears in the cursor */
+        .cursor-translation {
+            font-size: 2rem;
+            text-align: center;
+            max-width: 80%;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-background"></div>
+    <div class="custom-cursor">
+        <div class="cursor-translation">ブランド</div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                monopo <span>|</span> london
+            </div>
+        </header>
+        
+        <nav>
+            <div class="nav-left">
+                <div class="nav-item active">HOME</div>
+                <div class="nav-item">WORK</div>
+                <div class="nav-item">SERVICES</div>
+            </div>
+            
+            <div class="nav-right">
+                <div class="nav-item">TEAM</div>
+                <div class="nav-item">CONTACT</div>
+                <div class="nav-item">PRESS & NEWS</div>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="hero-text" data-translate="私たちは創造的な集合体のブランドです">
+                We are a brand of collective creativity
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-item">
+            <h3>Based in London</h3>
+            <p>Born in Tokyo</p>
+        </div>
+        
+        <div class="footer-item">
+            <h3>Design-driven</h3>
+            <p>creative agency</p>
+        </div>
+        
+        <div class="footer-item">
+            <h3>Branding, digital</h3>
+            <p>and communications</p>
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">↓</div>
+    
+    <script>
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            // Update custom cursor position
+            const cursor = document.querySelector('.custom-cursor');
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursor.style.opacity = '1';
+            
+            // Change background gradient based on cursor position
+            const xPercent = e.clientX / window.innerWidth;
+            const yPercent = e.clientY / window.innerHeight;
+            
+            // Create a gradient that follows the cursor
+            const gradient = `radial-gradient(
+                circle at ${e.clientX}px ${e.clientY}px, 
+                #f06449, 
+                #1c63e0 ${Math.min(50 + xPercent * 30, 70)}%, 
+                #f06449 ${Math.min(80 + yPercent * 20, 95)}%
+            )`;
+            
+            document.querySelector('.gradient-background').style.background = gradient;
+            
+            // Translation effect
+            const heroText = document.querySelector('.hero-text');
+            const translation = document.querySelector('.cursor-translation');
+            
+            // Calculate if cursor is over the hero text
+            const heroRect = heroText.getBoundingClientRect();
+            if (
+                e.clientX >= heroRect.left && 
+                e.clientX <= heroRect.right && 
+                e.clientY >= heroRect.top && 
+                e.clientY <= heroRect.bottom
+            ) {
+                // Show translation
+                translation.textContent = heroText.getAttribute('data-translate');
+                cursor.style.opacity = '1';
+            } else {
+                // Hide translation when not over text
+                translation.textContent = '';
+                cursor.style.opacity = '0.7';
+            }
+        });
+        
+        // Make sure cursor appears when mouse enters the page
+        document.addEventListener('mouseenter', () => {
+            document.querySelector('.custom-cursor').style.opacity = '1';
+        });
+        
+        // Hide cursor when mouse leaves the page
+        document.addEventListener('mouseleave', () => {
+            document.querySelector('.custom-cursor').style.opacity = '0';
+        });
+        
+        // Words to translate (English to Japanese mapping)
+        const translations = {
+            'brand': 'ブランド',
+            'creativity': '創造性',
+            'collective': '集合体',
+            'we': '私たち',
+            'are': 'は',
+            'of': 'の'
+        };
+        
+        // Initialize animations and effects
+        window.addEventListener('load', () => {
+            // Initialize with cursor position in center
+            const initialGradient = `radial-gradient(
+                circle at 50% 50%, 
+                #f06449, 
+                #1c63e0 60%, 
+                #f06449 90%
+            )`;
+            document.querySelector('.gradient-background').style.background = initialGradient;
+        });
+    </script>
+</body>
+</html>
