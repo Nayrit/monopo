@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Cursor Effect</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            background: black;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        .gradient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f06449 0%, #1c63e0 50%, #f06449 100%);
+            opacity: 0.8;
+            z-index: -1;
+            filter: blur(50px);
+        }
+        
+        .text-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        /* English layer - visible by default */
+        .english-layer {
+            font-size: 5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Japanese layer - positioned exactly over the English layer but hidden */
+        .japanese-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            visibility: hidden; /* Hidden by default */
+        }
+        
+        /* The glass cursor */
+        .glass-cursor {
+            position: fixed;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            background: rgba(0, 0, 50, 0.1);
+            box-shadow: 0 0 20px rgba(100, 100, 255, 0.2);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow: hidden;
+        }
+        
+        /* Clipping mask for text visibility */
+        .clip-area {
+            position: fixed;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        /* Clone of Japanese text visible in cursor */
+        .japanese-clone {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 5rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 800px; /* Match the width of the text container */
+        }
+        
+        /* Mask for hiding English text in cursor area */
+        .english-mask {
+            position: fixed;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: black;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            mix-blend-mode: exclusion; /* Changed to better hide the text */
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-background"></div>
+    
+    <div class="glass-cursor"></div>
+    <div class="clip-area"></div>
+    <div class="english-mask"></div>
+    
+    <div class="text-container">
+        <!-- English text layer (visible by default) -->
+        <div class="english-layer">
+            We are a brand<br>of collective creativity
+        </div>
+        
+        <!-- Japanese text layer (hidden) -->
+        <div class="japanese-layer">
+            <div>私たち は 一つの ブランド</div>
+            <div>の 集合的な 創造性</div>
+        </div>
+    </div>
+    
+    <script>
+        // Elements
+        const cursor = document.querySelector('.glass-cursor');
+        const clipArea = document.querySelector('.clip-area');
+        const englishMask = document.querySelector('.english-mask');
+        const japaneseLayer = document.querySelector('.japanese-layer');
+        const textContainer = document.querySelector('.text-container');
+        const englishLayer = document.querySelector('.english-layer');
+        
+        // Create a clone of Japanese text for the cursor
+        const japaneseClone = document.createElement('div');
+        japaneseClone.className = 'japanese-clone';
+        // Copy the HTML structure to maintain the line breaks
+        japaneseClone.innerHTML = japaneseLayer.innerHTML;
+        clipArea.appendChild(japaneseClone);
+        
+        // Function to update all elements based on mouse position
+        function updateCursorPosition(x, y) {
+            // Position glass cursor
+            cursor.style.left = x + 'px';
+            cursor.style.top = y + 'px';
+            
+            // Position clip area for Japanese text
+            clipArea.style.left = x + 'px';
+            clipArea.style.top = y + 'px';
+            
+            // Position mask to hide English text in cursor area
+            englishMask.style.left = x + 'px';
+            englishMask.style.top = y + 'px';
+            
+            // Make cursor visible
+            cursor.style.opacity = '1';
+            
+            // Calculate text container boundaries
+            const textRect = textContainer.getBoundingClientRect();
+            
+            // Position Japanese clone text relative to its original position
+            const japaneseClone = document.querySelector('.japanese-clone');
+            japaneseClone.style.left = (textRect.left - x + textRect.width/2) + 'px';
+            japaneseClone.style.top = (textRect.top - y + textRect.height/2) + 'px';
+            
+            // Update gradient background
+            const xPercent = x / window.innerWidth;
+            const yPercent = y / window.innerHeight;
+            const gradient = `radial-gradient(
+                circle at ${x}px ${y}px, 
+                #f06449, 
+                #1c63e0 ${Math.min(50 + xPercent * 30, 70)}%, 
+                #f06449 ${Math.min(80 + yPercent * 20, 95)}%
+            )`;
+            document.querySelector('.gradient-background').style.background = gradient;
+        }
+        
+        // Track mouse movement
+        document.addEventListener('mousemove', function(e) {
+            updateCursorPosition(e.clientX, e.clientY);
+        });
+        
+        // Initialize position at center of screen
+        updateCursorPosition(window.innerWidth / 2, window.innerHeight / 2);
+        
+        // Hide cursor when mouse leaves window
+        document.addEventListener('mouseleave', function() {
+            cursor.style.opacity = '0';
+            clipArea.style.opacity = '0';
+            englishMask.style.opacity = '0';
+        });
+        
+        // Ensure cursor appears when mouse enters window
+        document.addEventListener('mouseenter', function(e) {
+            cursor.style.opacity = '1';
+            clipArea.style.opacity = '1';
+            englishMask.style.opacity = '1';
+            updateCursorPosition(e.clientX, e.clientY);
+        });
+    </script>
+</body>
+</html>
